@@ -146,24 +146,127 @@
         </div>
     </div>
 </section>
+
+
 <section class="container">
-    <h2 class="section-title">Відео-гайд: Чи справді технології змінюють нашу свідомість?</h2>
-    <p class="section-sub">Розбір того, як алгоритми соцмереж впливають на концентрацію, дофамін та наше мислення.</p>
-    <div class="video-container">
-        <iframe 
-            src="https://youtube.com" 
-            title="Чи справді технології змінюють нашу свідомість?" 
-            frameborder="0" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-            referrerpolicy="no-referrer-when-downgrade"
-            allowfullscreen>
-        </iframe>
+    <h2 class="section-title">Відео-гайд: Як ваш телефон змінює вас?</h2>
+    <p class="section-sub">Науковий розбір того, як смартфони та алгоритми впливають на мозок, сон і концентрацію.</p>
+
+    <style>
+        .yt-player {
+            position: relative; width: 100%; aspect-ratio: 16 / 9;
+            background: #000; border-radius: 16px; overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6); border: 1px solid var(--border); user-select: none;
+        }
+        .yt-player video { width: 100%; height: 100%; object-fit: contain; display: block; cursor: pointer; }
+        .yt-top-bar {
+            position: absolute; top: 0; left: 0; right: 0; padding: 16px 20px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.85), transparent);
+            color: #fff; font-weight: 600; font-size: 0.95rem; text-decoration: none;
+            display: flex; align-items: center; gap: 10px; z-index: 2;
+        }
+        .yt-top-bar:hover { text-decoration: underline; }
+        .yt-badge { background: #ff0000; color: #fff; font-size: 0.72rem; font-weight: 800; padding: 2px 7px; border-radius: 4px; }
+        .yt-big-play {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 68px; height: 48px; background: rgba(255, 0, 0, 0.9);
+            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: 0.2s; border: none; z-index: 2;
+        }
+        .yt-big-play:hover { background: #ff0000; transform: translate(-50%, -50%) scale(1.08); }
+        .yt-big-play::after {
+            content: ''; border-style: solid; border-width: 10px 0 10px 18px;
+            border-color: transparent transparent transparent #fff; margin-left: 3px;
+        }
+        .yt-controls {
+            position: absolute; bottom: 0; left: 0; right: 0; z-index: 2;
+            background: linear-gradient(to top, rgba(0,0,0,0.92), transparent); padding: 24px 16px 12px;
+        }
+        .yt-progress-wrap { width: 100%; height: 5px; background: rgba(255,255,255,0.25); cursor: pointer; margin-bottom: 10px; }
+        .yt-progress-wrap:hover { height: 7px; }
+        .yt-progress-bar { height: 100%; width: 0%; background: #ff0000; position: relative; }
+        .yt-progress-bar::after {
+            content: ''; position: absolute; right: -6px; top: 50%; transform: translateY(-50%);
+            width: 13px; height: 13px; background: #ff0000; border-radius: 50%;
+        }
+        .yt-buttons { display: flex; align-items: center; justify-content: space-between; color: #fff; font-size: 0.85rem; }
+        .yt-left, .yt-right { display: flex; align-items: center; gap: 12px; }
+        .yt-btn { background: none; border: none; color: #fff; cursor: pointer; font-size: 1.1rem; padding: 2px 6px; }
+        .yt-btn:hover { color: #ff4d4d; }
+        .yt-link {
+            display: inline-flex; align-items: center; gap: 6px; background: rgba(0,0,0,0.7);
+            border: 1px solid rgba(255,255,255,0.25); color: #fff; text-decoration: none;
+            padding: 4px 10px; border-radius: 6px; font-size: 0.78rem; font-weight: 600;
+        }
+        .yt-link:hover { border-color: #ff0000; }
+    </style>
+
+    <div class="yt-player" id="ytPlayer">
+        <video id="ytVideo" preload="metadata" onclick="togglePlay()">
+            <source src="{{ url_for('static', filename='video.mp4') }}" type="video/mp4">
+        </video>
+        <a href="https://www.youtube.com/watch?v=j3y4HA4pRXo" target="_blank" rel="noopener noreferrer" class="yt-top-bar">
+            <span class="yt-badge">▶ VIDEO</span>
+            <span>Як ваш телефон змінює вас? [AsapScience українською] ↗</span>
+        </a>
+        <button class="yt-big-play" id="ytBigPlay" onclick="togglePlay()" aria-label="Play"></button>
+        <div class="yt-controls">
+            <div class="yt-progress-wrap" onclick="seekVideo(event)">
+                <div class="yt-progress-bar" id="ytProgressBar"></div>
+            </div>
+            <div class="yt-buttons">
+                <div class="yt-left">
+                    <button class="yt-btn" id="ytPlayBtn" onclick="togglePlay()">▶</button>
+                    <button class="yt-btn" id="ytMuteBtn" onclick="toggleMute()">🔊</button>
+                    <span id="ytTime">0:00 / 0:00</span>
+                </div>
+                <div class="yt-right">
+                    <a href="https://www.youtube.com/watch?v=j3y4HA4pRXo" target="_blank" rel="noopener noreferrer" class="yt-link">
+                        <span>Дивитися на</span>
+                        <span style="background:#ff0000;padding:1px 5px;border-radius:3px;font-weight:800;">YouTube</span>
+                    </a>
+                    <button class="yt-btn" onclick="toggleFull()" title="На весь екран">⛶</button>
+                </div>
+            </div>
+        </div>
     </div>
-    <div style="margin-top: 16px; padding: 16px 20px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
-        <span style="color: var(--muted); font-size: 0.92rem;">Якщо автор обмежив вбудовування плеєра на сторонніх сайтах:</span>
-        <a href="https://youtu.be/11b74W1ie5E" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="padding: 10px 20px; font-size: 0.9rem;">▶ Відкрити відео на YouTube</a>
-    </div>
+
+    <script>
+        const vid = document.getElementById('ytVideo');
+        const bigPlay = document.getElementById('ytBigPlay');
+        const playBtn = document.getElementById('ytPlayBtn');
+        const muteBtn = document.getElementById('ytMuteBtn');
+        const progressBar = document.getElementById('ytProgressBar');
+        const timeLabel = document.getElementById('ytTime');
+
+        function fmtTime(s) {
+            if (isNaN(s)) return "0:00";
+            return Math.floor(s / 60) + ":" + Math.floor(s % 60).toString().padStart(2, '0');
+        }
+        function togglePlay() {
+            if (vid.paused) { vid.play(); bigPlay.style.display = 'none'; playBtn.textContent = '⏸'; }
+            else { vid.pause(); bigPlay.style.display = 'flex'; playBtn.textContent = '▶'; }
+        }
+        function toggleMute() {
+            vid.muted = !vid.muted; muteBtn.textContent = vid.muted ? '🔇' : '🔊';
+        }
+        function seekVideo(e) {
+            const rect = e.currentTarget.getBoundingClientRect();
+            vid.currentTime = ((e.clientX - rect.left) / rect.width) * vid.duration;
+        }
+        function toggleFull() {
+            const el = document.getElementById('ytPlayer');
+            if (!document.fullscreenElement) el.requestFullscreen(); else document.exitFullscreen();
+        }
+        vid.addEventListener('timeupdate', () => {
+            progressBar.style.width = ((vid.currentTime / vid.duration) * 100) + '%';
+            timeLabel.textContent = fmtTime(vid.currentTime) + " / " + fmtTime(vid.duration);
+        });
+        vid.addEventListener('loadedmetadata', () => { timeLabel.textContent = "0:00 / " + fmtTime(vid.duration); });
+        vid.addEventListener('ended', () => { bigPlay.style.display = 'flex'; playBtn.textContent = '▶'; });
+    </script>
 </section>
+
 
 
 <section id="quiz" class="container">
