@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Версія 2.0: цифрова свідомість нового покоління</title>
+    <link href="https://googleapis.com" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0b0f19;
+            --card: #131a2a;
+            --card-hover: #1a2338;
+            --accent: #00f5a0;
+            --accent-2: #7b61ff;
+            --text: #f1f5f9;
+            --muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.08);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        h1, h2, h3 { font-family: 'Unbounded', sans-serif; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+        header {
+            padding: 70px 0 50px;
+            background: radial-gradient(circle at 80% 20%, rgba(123, 97, 255, 0.22), transparent 45%),
+                        radial-gradient(circle at 15% 70%, rgba(0, 245, 160, 0.15), transparent 45%);
+            border-bottom: 1px solid var(--border);
+        }
+        .badge {
+            display: inline-block; padding: 6px 14px; border-radius: 99px;
+            background: rgba(0, 245, 160, 0.12); color: var(--accent);
+            font-weight: 600; font-size: 0.85rem; margin-bottom: 20px;
+            border: 1px solid rgba(0, 245, 160, 0.3);
+        }
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.4rem); line-height: 1.15; margin-bottom: 20px;
+            background: linear-gradient(90deg, #ffffff, #a5b4fc, var(--accent));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .lead { font-size: 1.15rem; color: var(--muted); max-width: 680px; margin-bottom: 32px; }
+        .btn-group { display: flex; gap: 14px; flex-wrap: wrap; }
+        .btn {
+            padding: 14px 26px; border-radius: 12px; font-weight: 700;
+            text-decoration: none; transition: 0.25s; cursor: pointer; border: none; font-size: 0.95rem;
+        }
+        .btn-primary { background: var(--accent); color: #050811; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0, 245, 160, 0.3); }
+        .btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+        .btn-secondary:hover { background: var(--card-hover); }
+        section { padding: 60px 0; }
+        .section-title { font-size: 1.7rem; margin-bottom: 12px; }
+        .section-sub { color: var(--muted); margin-bottom: 35px; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
+        .tab-btn {
+            padding: 10px 18px; border-radius: 10px; background: var(--card); color: var(--muted);
+            border: 1px solid var(--border); cursor: pointer; font-weight: 600; transition: 0.2s;
+        }
+        .tab-btn.active { background: var(--accent-2); color: #fff; border-color: var(--accent-2); }
+        .compare-box { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 28px; transition: 0.3s; }
+        .card:hover { border-color: rgba(255,255,255,0.2); transform: translateY(-3px); }
+        .card-tag { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 10px; display: block; }
+        .card.new-gen { border-top: 3px solid var(--accent); }
+        .card.old-gen { border-top: 3px solid #64748b; }
+        .slider-wrapper { background: linear-gradient(135deg, #161f33, #101624); border: 1px solid var(--border); border-radius: 24px; padding: 36px; }
+        .slide { display: none; animation: fadeIn 0.4s ease; }
+        .slide.active { display: block; }
+        .slide-num { color: var(--accent); font-weight: 700; font-size: 0.9rem; margin-bottom: 8px; }
+        .slide h3 { font-size: 1.35rem; margin-bottom: 12px; }
+        .slider-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 25px; }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 20px; overflow: hidden; border: 1px solid var(--border); background: #000; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .quiz-box { background: var(--card); border-radius: 24px; padding: 32px; border: 1px solid var(--border); }
+        .quiz-option {
+            display: block; width: 100%; text-align: left; padding: 14px 18px; margin: 10px 0;
+            background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px;
+            color: var(--text); cursor: pointer; font-size: 0.95rem; transition: 0.2s;
+        }
+        .quiz-option:hover { background: rgba(123, 97, 255, 0.15); border-color: var(--accent-2); }
+        #quiz-result { display: none; padding: 20px; background: rgba(0, 245, 160, 0.1); border-radius: 14px; border: 1px solid var(--accent); margin-top: 15px; }
+        .guide-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
+        .guide-item { background: var(--card); padding: 22px; border-radius: 16px; border: 1px solid var(--border); }
+        .guide-num { width: 34px; height: 34px; background: var(--accent-2); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; margin-bottom: 14px; }
+        footer { text-align: center; padding: 40px 20px; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.9rem; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+<header>
+    <div class="container">
+        <h1>Версія 2.0: цифрова свідомість нового покоління</h1>
+        <p class="lead">Технології та штучний інтелект перестали бути просто інструментами — вони стали середовищем, у якому ми живемо. Досліджуємо, як змінюються наші орієнтири та як зберегти себе в епоху алгоритмів.</p>
+        <div class="btn-group">
+            <a href="#interactive" class="btn btn-primary">Дослідити зміни</a>
+            <a href="#quiz" class="btn btn-secondary">Пройти тест на цифрову свідомість</a>
+        </div>
+    </div>
+</header>
+
+<section id="interactive" class="container">
+    <h2 class="section-title">Як змінилися наші орієнтири?</h2>
+    <p class="section-sub">Натискай на сфери життя, щоб порівняти підхід минулого та сучасного покоління.</p>
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('focus', this)">🎯 Фокус та увага</button>
+        <button class="tab-btn" onclick="switchTab('knowledge', this)">🧠 Знання та ШІ</button>
+        <button class="tab-btn" onclick="switchTab('social', this)">💬 Спілкування</button>
+        <button class="tab-btn" onclick="switchTab('success', this)">🚀 Успіх та розвиток</button>
+    </div>
+    <div class="compare-box" id="compare-content"></div>
+</section>
+
+<section class="container">
+    <h2 class="section-title">Інтерактивний слайд-гід: 4 факти про покоління 2.0</h2>
+    <p class="section-sub">Гортай картки, щоб дізнатися головні виклики цифрової епохи.</p>
+    <div class="slider-wrapper">
+        <div class="slide active">
+            <div class="slide-num">СЛАЙД 01 / 04</div>
+            <h3>Економіка уваги: твій час — головна валюта</h3>
+            <p>Алгоритми соцмереж проєктуються тисячами інженерів так, щоб утримувати нас у стрічці якомога довше. Головна цінність Людини 2.0 — вміння свідомо керувати власною увагою, а не віддавати її на автопілот.</p>
+        </div>
+        <div class="slide">
+            <div class="slide-num">СЛАЙД 02 / 04</div>
+            <h3>Штучний інтелект як підсилювач, а не заміна</h3>
+            <p>ШІ може написати текст чи згенерувати картинку за секунди, але він не має власного життєвого досвіду, емпатії та морального вибору. Цінність переміщується з «просто зробити» на «придумати сенс і поставити правильне завдання».</p>
+        </div>
+        <div class="slide">
+            <div class="slide-num">СЛАЙД 03 / 04</div>
+            <h3>Цифровий слід та репутація</h3>
+            <p>У сучасному світі онлайн-профіль часто знайомиться з людьми раніше за нас самих. Відповідальність за власні слова та контент у мережі стає такою ж базовою цінністю, як ввічливість у реальному житті.</p>
+        </div>
+        <div class="slide">
+            <div class="slide-num">СЛАЙД 04 / 04</div>
+            <h3>Живий контакт — новий преміум-формат</h3>
+            <p>Коли будь-яке повідомлення можна надіслати миттєво, справжня жива розмова без відволікання на екран смартфона перетворюється на найвищий прояв поваги та довіри до іншої людини.</p>
+        </div>
+        <div class="slider-controls">
+            <button class="btn btn-secondary" onclick="changeSlide(-1)">← Назад</button>
+            <span id="slide-indicator" style="color: var(--muted); font-weight: 600;">1 з 4</span>
+            <button class="btn btn-primary" onclick="changeSlide(1)">Далі →</button>
+        </div>
+    </div>
+</section>
+<section class="container">
+    <h2 class="section-title">Відео-гайд: Чи справді технології змінюють нашу свідомість?</h2>
+    <p class="section-sub">Розбір того, як алгоритми соцмереж впливають на концентрацію, дофамін та наше мислення.</p>
+    <div class="video-container">
+        <iframe 
+            src="https://youtube.com" 
+            title="Чи справді технології змінюють нашу свідомість?" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen>
+        </iframe>
+    </div>
+    <div style="margin-top: 16px; padding: 16px 20px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+        <span style="color: var(--muted); font-size: 0.92rem;">Якщо автор обмежив вбудовування плеєра на сторонніх сайтах:</span>
+        <a href="https://youtu.be/11b74W1ie5E" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="padding: 10px 20px; font-size: 0.9rem;">▶ Відкрити відео на YouTube</a>
+    </div>
+</section>
+
+
+<section id="quiz" class="container">
+    <h2 class="section-title">Міні-тест: Ти керуєш гаджетами чи вони тобою?</h2>
+    <p class="section-sub">Відповідай чесно на 3 питання та отримай свій цифровий профіль.</p>
+    <div class="quiz-box">
+        <div id="quiz-body">
+            <h3 id="q-title" style="margin-bottom: 16px;">1. Що ти робиш у перші 10 хвилин після пробудження?</h3>
+            <div id="q-options"></div>
+        </div>
+        <div id="quiz-result"></div>
+    </div>
+</section>
+
+<section class="container">
+    <h2 class="section-title">Маніфест Людини 2.0: 4 правила балансу</h2>
+    <p class="section-sub">Практичний чек-лист, який варто зберегти собі.</p>
+    <div class="guide-grid">
+        <div class="guide-item">
+            <div class="guide-num">1</div>
+            <h3>Правило «Творця»</h3>
+            <p style="color: var(--muted); font-size: 0.92rem; margin-top: 8px;">Використовуй смартфон та ШІ для створення проєктів, навчання та ідей, а не лише для нескінченного скролінгу.</p>
+        </div>
+        <div class="guide-item">
+            <div class="guide-num">2</div>
+            <h3>Фільтр інформації</h3>
+            <p style="color: var(--muted); font-size: 0.92rem; margin-top: 8px;">Перевіряй джерела та не дозволяй алгоритмам формувати твій світогляд замість тебе.</p>
+        </div>
+        <div class="guide-item">
+            <div class="guide-num">3</div>
+            <h3>Цифровий детокс</h3>
+            <p style="color: var(--muted); font-size: 0.92rem; margin-top: 8px;">Вимикай сповіщення під час навчання чи зустрічей з друзями — твоя концентрація безцінна.</p>
+        </div>
+        <div class="guide-item">
+            <div class="guide-num">4</div>
+            <h3>Людяність понад усе</h3>
+            <p style="color: var(--muted); font-size: 0.92rem; margin-top: 8px;">Жоден алгоритм не замінить щиру підтримку, дружбу та реальні вчинки.</p>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="container">
+        <p>Інтерактивний веб-постер створено для обласного конкурсу МАН України • Номінація «Людина 2.0: цінності нового покоління»</p>
+        <p style="margin-top: 10px; color: var(--text); font-weight: 600;">Автор проєкту: Горбенко Ілля</p>
+    </div>
+</footer>
+
+<script>
+    const compareData = {
+        focus: {
+            oldTitle: "Людина 1.0 (Доцифрова епоха)",
+            oldText: "Дефіцит інформації, повільний пошук даних у книгах, але висока здатність годинами концентруватися на одній задачі без відволікань.",
+            newTitle: "Людина 2.0 (Сучасне покоління)",
+            newText: "Надлишок контенту кожну секунду. Головна навичка — фільтрація шуму, кліпове мислення перетворюється на вміння швидко орієнтуватися в потоках даних."
+        },
+        knowledge: {
+            oldTitle: "Людина 1.0: Енциклопедична пам'ять",
+            oldText: "Цінувалося запам'ятовування великих обсягів фактів, формул та правил. Знання накопичувалися роками.",
+            newTitle: "Людина 2.0: Навігація та робота з ШІ",
+            newText: "Будь-який факт доступний за 2 секунди. На перше місце виходить критичне мислення, вміння ставити точні запити (промпти) та перевіряти відповіді нейромереж."
+        },
+        social: {
+            oldTitle: "Людина 1.0: Локальне коло",
+            oldText: "Спілкування обмежувалося школою, двором чи містом. Втрата контакту при переїзді була звичною справою.",
+            newTitle: "Людина 2.0: Глобальні спільноти",
+            newText: "Друзі та однодумці по всьому світу, спільні онлайн-проєкти. Але головний виклик — не підмінити глибоку дружбу поверхневими лайками."
+        },
+        success: {
+            oldTitle: "Людина 1.0: Один шлях на все життя",
+            oldText: "Освіта один раз у молодості та стабільна робота за однією спеціальністю десятиліттями.",
+            newTitle: "Людина 2.0: Гнучкість та Lifelong Learning",
+            newText: "Технології оновлюються щороку. Головна цінність — вміння швидко вчитися новому, адаптуватися та поєднувати креативність із технологіями."
+        }
+    };
+
+    function switchTab(key, btn) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const item = compareData[key];
+        document.getElementById('compare-content').innerHTML = `
+            <div class="card old-gen">
+                <span class="card-tag">Як було раніше</span>
+                <h3>${item.oldTitle}</h3>
+                <p style="color: var(--muted); margin-top: 12px;">${item.oldText}</p>
+            </div>
+            <div class="card new-gen">
+                <span class="card-tag" style="color: var(--accent);">Нова реальність</span>
+                <h3>${item.newTitle}</h3>
+                <p style="color: var(--text); margin-top: 12px;">${item.newText}</p>
+            </div>
+        `;
+    }
+    switchTab('focus', document.querySelector('.tab-btn'));
+
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    function changeSlide(dir) {
+        slides[currentSlide].classList.remove('active');
+        currentSlide = (currentSlide + dir + slides.length) % slides.length;
+        slides[currentSlide].classList.add('active');
+        document.getElementById('slide-indicator').innerText = `${currentSlide + 1} з ${slides.length}`;
+    }
+
+    const quizQuestions = [
+        {
+            q: "1. Що ти робиш у перші 10 хвилин після пробудження?",
+            options: [
+                { text: "Одразу беру телефон і гортаю стрічку новин чи TikTok", score: 1 },
+                { text: "Перевіряю важливі повідомлення та розклад на день", score: 2 },
+                { text: "Снідаю, роблю зарядку і лише потім беру гаджет", score: 3 }
+            ]
+        },
+        {
+            q: "2. Як ти використовуєш штучний інтелект (ChatGPT тощо) у навчанні?",
+            options: [
+                { text: "Просто копіюю готову відповідь, навіть не читаючи", score: 1 },
+                { text: "Прошу пояснити складну тему простими словами або перевірити ідеї", score: 3 },
+                { text: "Взагалі не користуюсь і не довіряю технологіям", score: 2 }
+            ]
+        },
+        {
+            q: "3. Як проходить твоя зустріч із друзями в кафе чи на прогулянці?",
+            options: [
+                { text: "Кожен сидить у своєму телефоні, іноді показуючи меми", score: 1 },
+                { text: "Періодично перевіряємо сповіщення, але спілкуємося наживо", score: 2 },
+                { text: "Телефони лежать у кишенях — 100% уваги живому спілкуванню", score: 3 }
+            ]
+        }
+    ];
+
+    let qIndex = 0;
+    let totalScore = 0;
+
+    function renderQuiz() {
+        if (qIndex >= quizQuestions.length) {
+            document.getElementById('quiz-body').style.display = 'none';
+            const res = document.getElementById('quiz-result');
+            res.style.display = 'block';
+            let title = "", desc = "";
+            if (totalScore <= 4) {
+                title = "Ваш профіль: Цифровий пасажир 📱";
+                desc = "Алгоритми забирають занадто багато вашого часу. Спробуйте правило: 1 година без екрана перед сном та після пробудження.";
+            } else if (totalScore <= 7) {
+                title = "Ваш профіль: Дослідник балансу ⚖️";
+                desc = "Ви добре орієнтуєтесь у технологіях, але іноді дозволяєте стрічці новин красти вашу концентрацію.";
+            } else {
+                title = "Ваш профіль: Свідома Людина 2.0 🚀";
+                desc = "Чудовий результат! Технології та ШІ для вас — потужний інструмент розвитку, а живі цінності залишаються на першому місці.";
+            }
+            res.innerHTML = `<h3>${title}</h3><p style="margin-top:10px;">${desc}</p><button class="btn btn-secondary" style="margin-top:15px;" onclick="restartQuiz()">Пройти ще раз</button>`;
+            return;
+        }
+        const item = quizQuestions[qIndex];
+        document.getElementById('q-title').innerText = item.q;
+        const optDiv = document.getElementById('q-options');
+        optDiv.innerHTML = "";
+        item.options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'quiz-option';
+            btn.innerText = opt.text;
+            btn.onclick = () => {
+                totalScore += opt.score;
+                qIndex++;
+                renderQuiz();
+            };
+            optDiv.appendChild(btn);
+        });
+    }
+
+    function restartQuiz() {
+        qIndex = 0;
+        totalScore = 0;
+        document.getElementById('quiz-result').style.display = 'none';
+        document.getElementById('quiz-body').style.display = 'block';
+        renderQuiz();
+    }
+    renderQuiz();
+</script>
+</body>
+</html>
